@@ -1,0 +1,35 @@
+NOTE:RUN DIRECTORY MUST INCLUDE:
+Map_Key_Gen.py
+ptArray
+etArray
+MK_Decrypt.py
+encrypted_binary.txt
+
+WARNING: Map_Key_Gen.py AND MK_Decrypt.py GENERATE A LARGE NUMBER OF FILES. DEDICATE A DIRECTORY TO RUNNING THEM.
+NOTE: THESE .py FILES ARE USED TO DECRYPT BYTE SWAPPING ENCRYPTIONS
+
+
+Take encrypted file (encrypted) and copy hexbytes into a txt file (encrypted_binary.txt).
+
+$ xxd -p -c 1 encrypted > encrypted_binary.txt
+
+This formats the encrypted file to 1 hexbyte per line. Use wc -l to get the number of total bytes.
+
+$ wc -l encrypted_binary.txt
+
+Now generate Map Keys for all seeds. Enter the number of bytes when prompted.
+
+$ python3 Map_Key_Gen.py
+
+Map_Key_Gen.py uses OddBall Mapping from pre/post encryption to determine the map key.
+ie. takes a large array of 'a's with 1 'A', encrypts the file, then maps the final position of 'A' to the initial position. ('a' and 'A' store as 1 byte each)
+This is done for the number of bytes, for every seed. So 188 bytes/'A'positions x 1001 seeds is 188188 times.
+This should take quite a bit of time to generate considering there are 1001 different seeds. The bigger the file, the longer it takes.
+
+Once done run MK_Decrypt.py. Enter the number of bytes when prompted.
+
+$ python3 MK_Decrypt.py
+
+This generates raw binary files as well as output.txt that holds any decrypts that can be decoded into utf-8
+
+Look through the raw binaries for file signatures. Can just look at them through the file explore if you're lazy.
